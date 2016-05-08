@@ -9,27 +9,40 @@
 import UIKit
 
 class CalculatorViewController: UIViewController {
-
-  var userIsInTheMiddleOfTyping = false
-
-  @IBOutlet private weak var display: UILabel!
   
-  @IBAction private func touchDigit(sender: UIButton) {
+  var userIsInTheMiddleOfTyping = false
+  
+  var displayValue: Double {                                  // computed property converts String to Double
+    get {
+      return Double(display.text!)!
+    }
+    set {
+      display.text = String(newValue)
+    }
+  }
+  
+  @IBOutlet private weak var display: UILabel!                // calculator main display
+  
+  @IBAction private func touchDigit(sender: UIButton) {       // enter digit from keypad
     
     let digit = sender.currentTitle!
     let textCurrentlyInDisplay = display.text!
     
     if userIsInTheMiddleOfTyping {
       
-      display.text = textCurrentlyInDisplay + digit
-    } else {
+      if digit != "." || textCurrentlyInDisplay.rangeOfString(".") == nil {  // only allow to enter one period
+        display.text = textCurrentlyInDisplay + digit
+      }
       
+    } else {
       display.text = digit
       userIsInTheMiddleOfTyping = true
     }
   }
   
-  @IBAction private func performOperation(sender: UIButton) {
+  @IBAction private func performOperation(sender: UIButton) { // enter math symbol from keypad
+    
+    let mathSymbol = sender.currentTitle
     
   }
   
