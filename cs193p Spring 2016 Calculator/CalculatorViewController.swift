@@ -10,6 +10,8 @@ import UIKit
 
 class CalculatorViewController: UIViewController {
   
+  let brain = CalculatorBrain()
+  
   var userIsInTheMiddleOfTyping = false
   
   var displayValue: Double {                                  // computed property converts String to Double
@@ -17,11 +19,17 @@ class CalculatorViewController: UIViewController {
       return Double(display.text!)!
     }
     set {
-      display.text = String(newValue)
+      let formatter = NSNumberFormatter()
+      formatter.numberStyle = .DecimalStyle
+      formatter.maximumFractionDigits = 6
+      display.text = formatter.stringFromNumber(newValue)
     }
   }
   
   @IBOutlet private weak var display: UILabel!                // calculator main display
+  
+  @IBOutlet weak var descDisplay: UILabel!                    // description display
+  
   
   @IBAction private func touchDigit(sender: UIButton) {       // enter digit from keypad
     
@@ -42,9 +50,23 @@ class CalculatorViewController: UIViewController {
   
   @IBAction private func performOperation(sender: UIButton) { // enter math symbol from keypad
     
-    let mathSymbol = sender.currentTitle
+    let mathSymbol = sender.currentTitle!
     
+    if userIsInTheMiddleOfTyping {
+      brain.setOperand(displayValue)
+      userIsInTheMiddleOfTyping = false
+    }
+    
+    brain.performOperation(mathSymbol)
+    displayValue = brain.result
+    
+    if brain.description == "0" {
+      descDisplay.text = " "
+    } else if brain.isPartialResult {
+      descDisplay.text = brain.description + "..."
+    } else {
+      descDisplay.text = brain.description + "="
+    }
   }
-  
 }
 
