@@ -14,15 +14,20 @@ class CalculatorViewController: UIViewController {
   
   var userIsInTheMiddleOfTyping = false
   
-  var displayValue: Double {                                  // computed property converts String to Double
+  var displayValue: Double? {                                  // computed property converts String to Double
     get {
-      return Double(display.text!)!
+      return Double(display.text!)
     }
     set {
       let formatter = NSNumberFormatter()
       formatter.numberStyle = .DecimalStyle
       formatter.maximumFractionDigits = 6
+      
+      if let newValue = newValue {
       display.text = formatter.stringFromNumber(newValue)
+      } else {
+        display.text = ""
+      }
     }
   }
   
@@ -58,7 +63,11 @@ class CalculatorViewController: UIViewController {
     let mathSymbol = sender.currentTitle!
     
     if userIsInTheMiddleOfTyping {
-      brain.setOperand(displayValue)
+      if let displayValue = displayValue {
+        brain.setOperand(displayValue)
+      } else {
+        brain.setOperand(0.0)
+      }
       userIsInTheMiddleOfTyping = false
     }
     
