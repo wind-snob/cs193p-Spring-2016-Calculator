@@ -86,7 +86,12 @@ class CalculatorBrain {
           if description == "0" {
             oppDescription = formatNumber(accumulator) + symbol
           } else {
-            oppDescription = description + symbol
+            switch lastOpp! {
+            case .Equals:
+              oppDescription = description + symbol
+            default:
+              oppDescription = formatNumber(accumulator) + symbol
+            }
           }
           description = oppDescription
         }
