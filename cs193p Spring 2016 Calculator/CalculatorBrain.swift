@@ -13,7 +13,7 @@ class CalculatorBrain {
   private enum Operation {
     
     case Constant(Double)
-    case NullaryOperation( () -> Int32)
+    case NullaryOperation( () -> Double)
     case UnaryOperation( (Double) -> Double)
     case BinaryOperation((Double,Double) -> Double)
     case Equals
@@ -42,7 +42,7 @@ class CalculatorBrain {
     operations.updateValue(.UnaryOperation(sin), forKey: "sin")
     operations.updateValue(.Equals, forKey: "=")
     operations.updateValue(.Clear, forKey: "C")
-    operations.updateValue(.NullaryOperation(rand), forKey: "rand")
+    operations.updateValue(.NullaryOperation(drand48), forKey: "rand")
   }
   
   private var accumulator = 0.0
@@ -114,7 +114,7 @@ class CalculatorBrain {
         accumulator = opp(accumulator)
         
       case .NullaryOperation(let opp):
-        accumulator = Double(opp())
+        accumulator = opp()
         
       case .Constant(let value):
         if pendingOpp == nil {
