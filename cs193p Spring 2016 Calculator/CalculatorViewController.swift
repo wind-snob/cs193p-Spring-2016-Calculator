@@ -37,12 +37,17 @@ class CalculatorViewController: UIViewController {
     let textCurrentlyInDisplay = display.text!
     
     if userIsInTheMiddleOfTyping {
-      
-      if digit != "." || textCurrentlyInDisplay.rangeOfString(".") == nil {  // only allow to enter one period
+      if digit == "⬅︎" {
+        if textCurrentlyInDisplay.characters.count == 1 {
+          display.text = "0"
+          userIsInTheMiddleOfTyping = false
+        } else {
+          display.text = textCurrentlyInDisplay.substringToIndex(textCurrentlyInDisplay.endIndex.predecessor())
+        }
+      } else if digit != "." || textCurrentlyInDisplay.rangeOfString(".") == nil {  // only allow to enter one period
         display.text = textCurrentlyInDisplay + digit
       }
-      
-    } else {
+    } else if digit != "⬅︎" {
       display.text = digit
       userIsInTheMiddleOfTyping = true
     }
