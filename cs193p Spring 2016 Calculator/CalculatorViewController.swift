@@ -10,11 +10,11 @@ import UIKit
 
 class CalculatorViewController: UIViewController {
   
-  let brain = CalculatorBrain()
+  private let brain = CalculatorBrain()
   
-  var userIsInTheMiddleOfTyping = false
+  private var userIsInTheMiddleOfTyping = false
   
-  var displayValue: Double? {                                  // computed property converts String to Double
+  private var displayValue: Double? {                                  // computed property converts String to Double
     get {
       return Double(display.text!)
     }
@@ -33,7 +33,7 @@ class CalculatorViewController: UIViewController {
   
   @IBOutlet private weak var display: UILabel!                // calculator main display
   
-  @IBOutlet weak var descDisplay: UILabel!                    // description display
+  @IBOutlet private weak var descDisplay: UILabel!                    // description display
   
   
   @IBAction private func touchDigit(sender: UIButton) {       // enter digit from keypad

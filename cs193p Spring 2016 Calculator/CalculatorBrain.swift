@@ -67,7 +67,7 @@ class CalculatorBrain {
     }
   }
   
-  func clear() {
+  private func clear() {
     accumulator = 0.0
     description = "0"
     oppDescription = "0"
