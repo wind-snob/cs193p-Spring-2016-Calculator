@@ -45,6 +45,37 @@ class CalculatorBrain {
     operations.updateValue(.NullaryOperation(drand48), forKey: "rand")
   }
   
+  typealias PropertyList = AnyObject
+  
+  private var internalProgram = [AnyObject]()
+  
+  var program: PropertyList {
+    get {
+      return internalProgram
+    }
+    set {
+      clear()
+      if let arrayOfOps = newValue as? [AnyObject] {
+        for op in arrayOfOps {
+          if let operand = op as? Double {
+            setOperand(operand)
+          } else if let operation = op as? String {
+            performOperation(operation)
+          }
+        }
+      }
+    }
+  }
+  
+  func clear() {
+    accumulator = 0.0
+    description = "0"
+    oppDescription = "0"
+    lastOpp = nil
+    pendingOpp = nil
+    internalProgram.removeAll()
+  }
+  
   private var accumulator = 0.0
   private var oppDescription = "0"
   private var lastOpp: Operation?
@@ -59,11 +90,14 @@ class CalculatorBrain {
   func setOperand(operand: Double) {
     
     accumulator = operand
+    internalProgram.append(operand)
   }
   
   func performOperation(symbol: String) {
     
     if let operation = operations[symbol] {
+      
+      internalProgram.append(symbol)
       
       switch operation {
         
@@ -144,11 +178,7 @@ class CalculatorBrain {
         }
         
       case .Clear:
-        accumulator = 0.0
-        description = "0"
-        oppDescription = "0"
-        lastOpp = nil
-        pendingOpp = nil
+        clear()
       }
       
       lastOpp = operation
