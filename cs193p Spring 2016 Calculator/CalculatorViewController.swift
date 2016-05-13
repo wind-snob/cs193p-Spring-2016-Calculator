@@ -35,6 +35,19 @@ class CalculatorViewController: UIViewController {
   
   @IBOutlet private weak var descDisplay: UILabel!                    // description display
   
+  @IBAction private func saveToMemory() {
+    
+    let program = brain.program
+    brain.variableValues["M"] = displayValue!
+    brain.program = program
+    displayValue = brain.result
+  }
+  
+  @IBAction func retrieveFromMemory() {
+    
+    brain.setOperand("M")
+    displayValue = brain.result
+  }
   
   @IBAction private func touchDigit(sender: UIButton) {       // enter digit from keypad
     

@@ -31,6 +31,7 @@ class CalculatorBrain {
   private var operations = [String : Operation]()
   
   init() {
+    operations.updateValue(.Constant(0.0), forKey: "memory")
     operations.updateValue(.Constant(M_PI), forKey: "π")
     operations.updateValue(.Constant(M_E), forKey: "e")
     operations.updateValue(.BinaryOperation(+), forKey: "+")
@@ -87,6 +88,14 @@ class CalculatorBrain {
     }
   }
   
+  func setOperand(variableName: String) {
+    
+    performOperation(variableName)
+    
+  }
+  
+  var variableValues = [String : Double]()
+  
   func setOperand(operand: Double) {
     
     accumulator = operand
@@ -95,9 +104,9 @@ class CalculatorBrain {
   
   func performOperation(symbol: String) {
     
+    internalProgram.append(symbol)
+    
     if let operation = operations[symbol] {
-      
-      internalProgram.append(symbol)
       
       switch operation {
         
@@ -124,6 +133,8 @@ class CalculatorBrain {
           } else {
             switch lastOpp! {
             case .Equals:
+              oppDescription = description + symbol
+            case .UnaryOperation( _ ):
               oppDescription = description + symbol
             default:
               oppDescription = formatNumber(accumulator) + symbol
@@ -179,9 +190,24 @@ class CalculatorBrain {
         
       case .Clear:
         clear()
+        variableValues.removeAll()
       }
       
       lastOpp = operation
+    } else {
+      
+      if let variableValue = variableValues[symbol] {
+        accumulator = variableValue
+      } else {
+        accumulator = 0.0
+      }
+      
+      if pendingOpp == nil {
+        description = ""
+      }
+      oppDescription = symbol
+      description += oppDescription
+      lastOpp = operations["memory"]
     }
   }
   
